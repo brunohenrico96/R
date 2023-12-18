@@ -1,0 +1,35 @@
+# Importar as bibliotecas necessárias
+library(tm)
+library(dplyr)
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(dplyr)
+
+
+# Carregar os dados
+dados <- read_xlsx("Pasta1.xlsx")
+dados <- dados[,1]
+
+
+# Quebrar os nomes em tokens
+tokens <- lapply(dados$Cliente, strsplit, split = " ")
+
+# Remover as palavras mais recorrentes
+palavras_recorrentes <- findFreqTerms(tokens, lowfreq = 1)
+tokens <- lapply(tokens, removeWords, palavras_recorrentes)
+
+# Concatenar os tokens com os IDs
+dados_tokens <- cbind(dados, tokens)
+
+# Calcular a distância entre os nomes
+distancia <- stringdist(dados_tokens$tokens, dados_tokens$tokens, method = "jaccard")
+
+# Identificar os nomes mais similares
+nomes_similares <- which(distancia < 0.7)
+
+# Juntar os nomes mais similares
+dados_tokens$nome[nomes_similares] <- gsub(" ", "", dados_tokens$tokens[nomes_similares])
+
+# Salvar os resultados
+write.csv(dados_tokens, "clientes_limpos.csv")
