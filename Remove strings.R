@@ -5,7 +5,7 @@ library(writexl)
 library(dplyr)
 
 # Carregar o dataframe (substitua "seu_dataframe.csv" pelo nome do arquivo do seu dataframe)
-df <- read_xlsx("AJUSTE VICTOR.xlsx")
+df <- read_xlsx("planilha.xlsx")
 
 # Função para remover as palavras indesejadas dos nomes dos clientes
 remove_palavras_indesejadas <- function(nome) {
